@@ -7,7 +7,9 @@ import NoteModal from '../NoteModal/NoteModal';
 import styles from './App.module.css';
 import { useDebounce } from 'use-debounce';
 import { fetchNotes } from '../../services/noteService';
-import type { Note } from '../../services/noteService';
+import type { Note } from '../../types/note';
+
+
 
 const App = () => {
   const [page, setPage] = useState<number>(1);

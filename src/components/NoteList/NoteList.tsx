@@ -4,8 +4,12 @@ import styles from './NoteList.module.css';
 import type { Note } from '../../types/note';
 
 interface NoteListProps {
-  notes: Note[]; 
+  notes: Note[];
+  isLoading: boolean;
+  isError: boolean;
+  isSuccess: boolean;
 }
+
 
 const NoteList = ({ notes }: NoteListProps) => {
   const queryClient = useQueryClient();
