@@ -7,8 +7,6 @@ interface NoteModalProps {
   onClose: () => void;
 }
 
-const modalRoot = document.getElementById('modal-root')!;
-
 const NoteModal = ({ onClose }: NoteModalProps) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -43,7 +41,7 @@ const NoteModal = ({ onClose }: NoteModalProps) => {
         <NoteForm onSuccess={onClose} />
       </div>
     </div>,
-    modalRoot
+    document.body
   );
 };
 

@@ -9,8 +9,6 @@ import { useDebounce } from 'use-debounce';
 import { fetchNotes } from '../../services/noteService';
 import type { Note } from '../../types/note';
 
-
-
 const App = () => {
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>('');
@@ -19,7 +17,7 @@ const App = () => {
 
   useEffect(() => {
     setPage(1);
-  }, [debouncedSearch]);
+  }, [search]);
 
   const { data, isLoading, isError, isSuccess } = useQuery<{
     notes: Note[];
@@ -27,7 +25,7 @@ const App = () => {
   }>({
     queryKey: ['notes', debouncedSearch, page],
     queryFn: () => fetchNotes({ search: debouncedSearch, page }),
-    enabled: debouncedSearch.length >= 0, 
+    enabled: debouncedSearch.length >= 0,
     placeholderData: keepPreviousData,
   });
 
@@ -43,22 +41,26 @@ const App = () => {
     <div className={styles.app}>
       <header className={styles.toolbar}>
         <SearchBox value={search} onChange={handleSearchChange} />
-        <Pagination
-          page={page}
-          pageCount={data?.totalPages ?? 0}
-          onChange={handlePageChange}
-        />
+        {data?.totalPages && data?.totalPages > 1 && (
+          <Pagination
+            page={page}
+            pageCount={data.totalPages}
+            onChange={handlePageChange}
+          />
+        )}
         <button className={styles.button} onClick={() => setIsModalOpen(true)}>
           Create note +
         </button>
       </header>
 
-      <NoteList
-        notes={data?.notes ?? []}
-        isLoading={isLoading}
-        isError={isError}
-        isSuccess={isSuccess}
-      />
+      {data?.totalPages && data?.notes.length > 0 && (
+        <NoteList
+          notes={data.notes}
+          isLoading={isLoading}
+          isError={isError}
+          isSuccess={isSuccess}
+        />
+      )}
 
       {isModalOpen && <NoteModal onClose={() => setIsModalOpen(false)} />}
     </div>
