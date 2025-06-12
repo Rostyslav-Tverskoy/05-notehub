@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {type Note } from '../types/note';
+import { type Note } from '../types/note';
 
 const API_BASE = 'https://notehub-public.goit.study/api/notes';
 const token = import.meta.env.VITE_NOTEHUB_TOKEN;
@@ -14,9 +14,9 @@ export interface FetchNotesParams {
   perPage?: number;
 }
 
+
 export interface FetchNotesResponse {
   notes: Note[];
-  page: number;
   totalPages: number;
 }
 
@@ -34,7 +34,7 @@ export const fetchNotes = async ({
     params.append('search', search.trim());
   }
 
-  const res = await axios.get(`${API_BASE}?${params.toString()}`, {
+  const res = await axios.get<FetchNotesResponse>(`${API_BASE}?${params.toString()}`, {
     headers,
   });
 
@@ -42,11 +42,12 @@ export const fetchNotes = async ({
 };
 
 export const createNote = async (note: Omit<Note, 'id'>): Promise<Note> => {
-  const res = await axios.post(API_BASE, note, { headers });
+  const res = await axios.post<Note>(API_BASE, note, { headers });
   return res.data;
 };
 
-export const deleteNote = async (id: string): Promise<Note> => {
-  const res = await axios.delete(`${API_BASE}/${id}`, { headers });
+
+export const deleteNote = async (id: number): Promise<Note> => {
+  const res = await axios.delete<Note>(`${API_BASE}/${id}`, { headers });
   return res.data;
 };

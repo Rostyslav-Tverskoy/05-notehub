@@ -11,13 +11,34 @@ const modalRoot = document.getElementById('modal-root')!;
 
 const NoteModal = ({ onClose }: NoteModalProps) => {
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    document.body.style.overflow = 'hidden';
+
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
     window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handler);
+    };
   }, [onClose]);
 
+  const onBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return createPortal(
-    <div className={styles.backdrop} onClick={onClose} role="dialog" aria-modal="true">
+    <div
+      className={styles.backdrop}
+      onClick={onBackdropClick}
+      role="dialog"
+      aria-modal="true"
+    >
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
         <NoteForm onSuccess={onClose} />
       </div>

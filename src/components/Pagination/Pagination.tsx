@@ -1,25 +1,18 @@
 import ReactPaginate from 'react-paginate';
 import styles from './Pagination.module.css';
-import { useQuery } from '@tanstack/react-query';
-import { fetchNotes } from '../../services/noteService';
 
 interface PaginationProps {
   page: number;
+  pageCount: number;       
   onChange: (page: number) => void;
-  search: string;
 }
 
-const Pagination = ({ page, onChange, search }: PaginationProps) => {
-  const { data } = useQuery({
-    queryKey: ['notes', page, search],
-    queryFn: () => fetchNotes({ page, search }),
-  });
-
-  if (!data || data.totalPages <= 1) return null;
+const Pagination = ({ page, pageCount, onChange }: PaginationProps) => {
+  if (pageCount <= 1) return null;
 
   return (
     <ReactPaginate
-      pageCount={data.totalPages}
+      pageCount={pageCount}
       pageRangeDisplayed={5}
       marginPagesDisplayed={1}
       onPageChange={({ selected }) => onChange(selected + 1)}
